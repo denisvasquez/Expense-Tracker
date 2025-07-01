@@ -11,7 +11,6 @@ const Navbar = () => {
     const { state } = useGlobalState()
     const navigate = useNavigate()
 
-    console.log(state.user)
     const logout = () => {
         localStorage.removeItem('token')
         localStorage.removeItem('user')

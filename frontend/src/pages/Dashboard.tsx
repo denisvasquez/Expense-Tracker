@@ -1,9 +1,15 @@
+// components
+import TableModules from "@components/TableModules"
+
 const Home = () => {
     return (
+        <>
         <div className="container">
             <h1>Home</h1>
             <p>This is the home page.</p>
         </div>
+        <TableModules />
+        </>
     )
 }
 
