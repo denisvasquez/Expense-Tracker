@@ -4,6 +4,9 @@ export interface ILogin {
 }
 
 export interface IRegister {
-    name: string;
+    username: string;
     password: string;
+    email: string;
+    typeAuth: number;
+    role_id: number;
 }

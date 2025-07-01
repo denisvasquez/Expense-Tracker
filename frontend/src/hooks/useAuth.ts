@@ -1,11 +1,11 @@
 import axios from 'axios'
 
 // interfaces
-import { ILogin } from '@types/auth'
+import { ILogin, IRegister } from '@types/auth'
 
 const useAuth = () => {
-    const login = async (credentials: ILogin) => {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`,
+    const register = async (credentials: IRegister) => {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`,
             JSON.stringify(credentials), {
             headers: {
                 'Content-Type': 'application/json',
@@ -16,7 +16,7 @@ const useAuth = () => {
     }
 
     return {
-        login,
+        register,
     }
 }
 
