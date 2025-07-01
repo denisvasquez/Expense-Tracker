@@ -30,17 +30,30 @@ const login = async (req, res) => {
 }
 
 const register = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, email, role_id, typeAuth, password } = req.body;
     passwordHashed = await bycrypt.hash(password, 10);
     try {
-        const rows = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+        let rows = await pool.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, email]);
         if (rows.length > 0) {
-            return res.status(400).json({ message: 'User already exists' });
+            if (rows[0].username === username) {
+                return res.status(400).json({ message: 'Username already exists' });
+            }
+            if (rows[0].email === email) {
+                return res.status(400).json({ message: 'Email already exists' });
+            }
         }
 
-        await pool.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, passwordHashed]);
+        const userData = {
+            username,
+            email,
+            role_id,
+            type_auth: typeAuth,
+            password: passwordHashed
+        }
 
-        return res.status(201).json({ message: 'User registered successfully', token });
+        await pool.query('INSERT INTO users SET ?', userData);
+
+        return res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal server error' });

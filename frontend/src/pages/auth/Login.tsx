@@ -1,26 +1,25 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
-// types
-import { ILogin } from '@types/auth'
-
-// hooks
-import useAuth from '@hooks/useAuth'
+// redux-slice-users
+import { loginUser } from '@features/users/users.slice'
+import { ILogin } from '@features/users/IUsers'
 
 const Login = () => {
-    const { login } = useAuth()
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [credentials, setCredentials] = useState<ILogin>({
         username: '',
         password: '',
     })
-    const [loginError, setLoginError] = useState<string | null>(null)
+    const [loginError, setLoginError] = useState<string | null>(null);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.preventDefault()
+        event.preventDefault();
 
-        const { name, value } = event.target
+        const { name, value } = event.target;
 
         setCredentials(current => ({
             ...current,
@@ -29,18 +28,13 @@ const Login = () => {
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+        event.preventDefault();
 
         try {
-            const response = await login(credentials)
-            localStorage.setItem('token', response.data.body.token)
-            localStorage.setItem(
-                'user',
-                JSON.stringify(response.data.body.user),
-            )
+            await dispatch(loginUser(credentials)).unwrap();
             navigate('/dashboard')
         } catch (error) {
-            setLoginError(error.response.data.message)
+            setLoginError(error)
         }
     }
 
@@ -79,22 +73,22 @@ const Login = () => {
                     />
                     <button
                         type="submit"
-                        className="bg-blue-500 text-white p-2 rounded"
+                        className="bg-blue-500 text-white p-2 rounded cursor-pointer hover:bg-blue-700"
                     >
                         Login
                     </button>
                 </form>
                 <p className="mt-4 text-sm text-gray-600">
                     Don't have an account?{' '}
-                    <a href="/register" className="text-blue-500">
+                    <Link to="/register" className="text-blue-500">
                         Register
-                    </a>
+                    </Link>
                 </p>
                 <p className="mt-2 text-sm text-gray-600">
                     Forgot your password?{' '}
-                    <a href="/reset-password" className="text-blue-500">
+                    <Link to="/reset-password" className="text-blue-500">
                         Reset it
-                    </a>
+                    </Link>
                 </p>
             </div>
         </div>

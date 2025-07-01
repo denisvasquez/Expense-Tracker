@@ -18,6 +18,4 @@ app.use(require('morgan')('dev'));
 app.use('/api/auth', require('./modules/auth/auth.router'));
 
 // start server
-app.listen(app.get('port'), () => {
-    console.log('Server on port', app.get('port'));
-});
+app.listen(app.get('port'));

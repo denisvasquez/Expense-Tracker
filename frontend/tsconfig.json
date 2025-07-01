@@ -14,6 +14,7 @@
       "@context/*": ["./src/context/*"],
       "@types/*": ["src/types/*"],
       "@containers/*": ["./src/containers/*"],
+      "@features/*": ["./src/app/features/*"],
     }
   }
 }
