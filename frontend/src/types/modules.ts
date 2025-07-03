@@ -3,11 +3,9 @@ export interface IModulesTypes {
     name: string;
 }
 
+// type_module only id
 export interface IModules {
-    id: number;
     name: string;
-    type: IModulesTypes;
-    description: string;
-    createdAt: Date;
-    updatedAt: Date;
+    type_module: number;
+    user_id: number;
 }

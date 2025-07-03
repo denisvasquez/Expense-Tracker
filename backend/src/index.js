@@ -16,6 +16,7 @@ app.use(require('morgan')('dev'));
 
 // router
 app.use('/api/auth', require('./modules/auth/auth.router'));
+app.use('/api/modules', require('./modules/modules/modules.router'));
 
 // start server
 app.listen(app.get('port'));

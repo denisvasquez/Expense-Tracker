@@ -1,19 +1,25 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react'
 
 // components
-import Navbar from '@components/Navbar';
+import Navbar from '@components/Navbar'
+import Sidebar from '@components/Sidebar'
 
 interface ILayout {
-    children: ReactNode;
+    children: ReactNode
 }
 
 const Layout = ({ children }: ILayout) => {
     return (
         <>
             <Navbar />
-            <div className='absolute top-[4rem]'>{children}</div>
+            <div className="flex absolute top-[4rem] w-full">
+                <Sidebar />
+                <div className='w-full transition-all duration-300'>
+                    {children}
+                </div>
+            </div>
         </>
     )
 }
 
-export default Layout;
+export default Layout

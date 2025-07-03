@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 
 // redux-slice-auth-login
 import { IRegister } from '@types/auth'
-import { registerUser } from '@features/users/users.slice'
+import { registerUser } from '@features/users/auth.slice'
 
 const Register = () => {
     const navigate = useNavigate()

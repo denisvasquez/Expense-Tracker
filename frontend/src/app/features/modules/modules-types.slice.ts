@@ -1,35 +1,48 @@
-import axios from "axios";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import axios from 'axios'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 
 // interfaces
-import { IModulesTypes } from "./IModules";
+import { IModulesTypes } from '@types/modules'
 
-export const modulesTypes = createAsyncThunk<IModulesTypes[], void>("modulesTypes/getModulesTypes", async () => {
-    try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/modules/types`);
-        return response.data.body;
-    } catch (error) {
-        console.error("Failed to fetch modules types");
-        throw error;
-    }
-})
+export const getModulesTypes = createAsyncThunk<IModulesTypes[], void>(
+    'modulesTypes/getModulesTypes',
+    async (_, thunkApi) => {
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/modules/types`,
+            )
+            return response.data.body
+        } catch (error) {
+            console.error('Failed to fetch modules types')
+            return thunkApi.rejectWithValue(
+                'Failed to fetch modules types, please try again.',
+            )
+        }
+    },
+)
 
-const initialState: IModulesTypes[] = [];
+const initialState: IModulesTypes[] = []
 
 export const modulesTypesSlice = createSlice({
-    name: "modulesTypes",
+    name: 'modulesTypes',
     initialState,
     reducers: {},
-    extraReducers: (builder) => {
+    extraReducers: builder => {
         builder
-            .addCase(modulesTypes.fulfilled, (state, action: PayloadAction<IModulesTypes[]>) => {
-                return action.payload;
+            .addCase(
+                getModulesTypes.fulfilled,
+                (state, action: PayloadAction<IModulesTypes[]>) => {
+                    return action.payload
+                },
+            )
+            .addCase(getModulesTypes.rejected, (state, action) => {
+                console.error(
+                    'Failed to fetch modules types:',
+                    action.error.message,
+                )
             })
-            .addCase(modulesTypes.rejected, (state, action) => {
-                console.error("Failed to fetch modules types:", action.error.message);
-            });
-    }
-});
+    },
+})
 
-export default modulesTypesSlice.reducer;
+export default modulesTypesSlice.reducer
