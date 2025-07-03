@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
 // redux-slice-auth-login
-import { loginUser } from '@features/users/users.slice'
+import { loginUser } from '@features/users/auth.slice'
 import { ILogin } from '@types/auth'
 
 const Login = () => {

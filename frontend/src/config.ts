@@ -1,8 +1,7 @@
 import { INavLinks } from '@types/config'
 
 export default {
-    navLinks: <INavLinks>[
-        // { name: 'Home', path: '/', auth: true, component: 'Navbar' },
+    navLinks: <INavLinks[]> [
         { name: 'Login', path: '/login', auth: false, component: 'Navbar' },
         {
             name: 'Register',
@@ -23,6 +22,11 @@ export default {
             auth: true,
             component: 'Sidebar',
         },
+        {
+            name: 'Create Module',
+            path: '/add-module',
+            auth: true,
+            component: 'Sidebar',
+        },
     ],
-    test: 'test',
 }
