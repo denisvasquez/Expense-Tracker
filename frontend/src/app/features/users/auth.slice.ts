@@ -1,28 +1,32 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 // interfaces
-import { User, ILogin } from "./IUsers";
+import { User, ILogin, IRegister } from "@types/auth";
 
-const initialValue:User = {
-    token: "", username: ""
-}
-
-// Example async thunks for creating and logging in a user
-export const createUser = createAsyncThunk<User, { username: string; password: string }>(
+export const registerUser = createAsyncThunk<User, IRegister>(
     "users/createUser",
-    async (userData) => {
-        // Replace with your API call
-        // const response = await api.createUser(userData);
-        // return response.data;
-        return { token: "dummy_token", username: userData.username };
+    async (registerData, thunkApi) => {
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`,
+                JSON.stringify(registerData), {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            return {
+                message: response.data.message,
+            }
+        } catch (error) {
+            return thunkApi.rejectWithValue(error.response?.data?.message || "Registration failed");
+        }
     }
 );
 
 export const loginUser = createAsyncThunk<User, ILogin>(
     "users/loginUser",
-    async (loginData, thunkApi) =>{
+    async (loginData, thunkApi) => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`,
                 JSON.stringify(loginData), {
@@ -54,10 +58,7 @@ export const usersSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(createUser.fulfilled, (state, action: PayloadAction<User>) => {
-                state.token = action.payload.token;
-                state.username = action.payload.username;
-            })
+            .addCase(registerUser.fulfilled, (state, action: PayloadAction<{ message: string }>) => {})
             .addCase(loginUser.fulfilled, (state, action: PayloadAction<User>) => {
                 state.token = action.payload.token;
                 state.username = action.payload.username;

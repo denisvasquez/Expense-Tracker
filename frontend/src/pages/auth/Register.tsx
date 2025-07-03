@@ -1,14 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
-// types
+// redux-slice-auth-login
 import { IRegister } from '@types/auth'
-
-// hooks
-import useAuth from '@hooks/useAuth'
+import { registerUser } from '@features/users/auth.slice'
 
 const Register = () => {
-    const { register } = useAuth()
     const navigate = useNavigate()
     const [registerError, setRegisterError] = useState<string | null>(null)
     const [credentials, setCredentials] = useState<IRegister>({
@@ -18,6 +16,7 @@ const Register = () => {
         role_id: import.meta.env.VITE_LOCAL_ROLE,
         typeAuth: import.meta.env.VITE_LOCAL_TYPE_AUTH,
     })
+    const dispatch = useDispatch()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCredentials({
@@ -30,10 +29,10 @@ const Register = () => {
         event.preventDefault()
 
         try {
-            await register(credentials)
+            await dispatch(registerUser(credentials)).unwrap()
             navigate('/login')
         } catch (error) {
-            setRegisterError(error.response.data.message)
+            setRegisterError(error)
         }
     }
 
@@ -48,7 +47,10 @@ const Register = () => {
             {/* login form */}
             <div className="bg-white p-6 border border-gray-300 rounded shadow-md w-96">
                 <h2 className="text-2xl font-bold mb-4">Register</h2>
-                <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+                <form
+                    className="flex flex-col space-y-4"
+                    onSubmit={handleSubmit}
+                >
                     <input
                         type="text"
                         name="username"
@@ -56,6 +58,7 @@ const Register = () => {
                         value={credentials.username}
                         onInput={handleChange}
                         autoComplete="off"
+                        autoFocus
                         className="border border-gray-300 p-2 rounded"
                     />
                     <input

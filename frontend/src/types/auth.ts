@@ -10,3 +10,8 @@ export interface IRegister {
     typeAuth: number;
     role_id: number;
 }
+
+export interface User {
+    token: string;
+    username: string
+}

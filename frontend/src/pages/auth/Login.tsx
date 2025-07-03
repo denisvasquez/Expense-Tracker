@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
-// redux-slice-users
-import { loginUser } from '@features/users/users.slice'
-import { ILogin } from '@features/users/IUsers'
+// redux-slice-auth-login
+import { loginUser } from '@features/users/auth.slice'
+import { ILogin } from '@types/auth'
 
 const Login = () => {
     const navigate = useNavigate();
@@ -60,6 +60,7 @@ const Login = () => {
                         onInput={handleInputChange}
                         placeholder="Username"
                         autoComplete="off"
+                        autoFocus
                         className="border border-gray-300 p-2 rounded"
                     />
                     <input

@@ -1,13 +1,16 @@
 import { useNavigate, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 
 import config from '../config'
 
 // context
 import useGlobalState from '@hooks/useGlobalState'
 
-// hooks
+// interfaces
+import { INavLinks } from '@types/config'
 
 const Navbar = () => {
+    const [navLinks, setNavLinks] = useState<INavLinks[]>([])
     const { state } = useGlobalState()
     const navigate = useNavigate()
 
@@ -17,19 +20,10 @@ const Navbar = () => {
         navigate('/login', { replace: true })
     }
 
-    const navLinks = config.navLinks.filter(link => {
-        if (link.component === 'Navbar' && window.location.pathname !== link.path) {
-            return (
-                <Link
-                    key={link.name}
-                    to={link.path}
-                    className="text-gray-900 hover:text-gray-700"
-                >
-                    {link.name}
-                </Link>
-            )
-        }
-    })
+    useEffect(() => {
+        const navLinks = config.navLinks.filter(link => link.component === 'Navbar' && window.location.pathname !== link.path)
+        setNavLinks(navLinks)
+    }, [window.location.pathname])
 
     return (
         <nav className="fixed w-full h-[4rem] bg-white border-b border-t border-gray-300">
@@ -61,7 +55,10 @@ const Navbar = () => {
                                 </Link>
                             ))}
                     {state.user && (
-                        <button onClick={logout} className="text-gray-900 hover:text-gray-700 cursor-pointer">
+                        <button
+                            onClick={logout}
+                            className="text-gray-900 hover:text-gray-700 cursor-pointer"
+                        >
                             Logout
                         </button>
                     )}

@@ -2,35 +2,27 @@ import { useEffect, useState } from 'react';
 import { decodeToken } from 'react-jwt';
 
 // types
-import { IGlobalState } from '@types/global-state.ts';
+import { IGlobalState } from '@types/global-state';
 
-const globalState = {
-    user: null,
-}
+const token = localStorage.getItem('token');
+const initialUser = token ? decodeToken(token) : null;
 
 const useGlobalState = () => {
-    const [state, setState] = useState<IGlobalState>(globalState);
+    const [state, setState] = useState<IGlobalState>({ user: initialUser });
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            const decodedToken = decodeToken(token);
-            if (decodedToken) {
-                setState((prevState) => ({
-                    ...prevState,
-                    user: decodedToken,
-                }));
-            }
+            const decoded = decodeToken(token);
+            setState({ user: decoded ?? null });
         } else {
-            setState((prevState) => ({
-                ...prevState,
-                user: null,
-            }));
+            setState({ user: null });
         }
-    }, [window.location.pathname]);
+        setLoading(false);
+    }, []); // Se ejecuta solo una vez al montar
 
-    return { state };
-
-}
+    return { state, loading };
+};
 
 export default useGlobalState;
