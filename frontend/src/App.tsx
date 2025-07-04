@@ -18,16 +18,17 @@ import Layout from '@containers/Layout'
 
 // redux-types-module
 import { getModulesTypes } from '@features/modules/modules-types.slice'
-import { getModules } from '@features/modules/modules.slice'
+import { getModulesTransactions } from '@features/modules/modules.slice'
+import { getTransactionTypes } from '@features/transactions/transactions-types.slice'
 
 const App = () => {
-    const globalState = useGlobalState()
-    const dispatch = useDispatch()
-    console.log(globalState);
+    const globalState = useGlobalState();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getModulesTypes());
-        dispatch(getModules(globalState.state?.user?.id));
+        dispatch(getModulesTransactions(globalState.state?.user?.id));
+        dispatch(getTransactionTypes());
     }, [dispatch])
 
     return (
@@ -37,6 +38,7 @@ const App = () => {
                     <Routes>
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/add-module" element={<Dashboard />} />
+                        <Route path="/add-transaction" element={<Dashboard />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                     </Routes>
