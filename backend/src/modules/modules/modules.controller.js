@@ -35,6 +35,53 @@ const getModulesByUserId = async (req, res) => {
     }
 }
 
+const getModulesTransactionsByUserId = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const rows = await pool.query(
+            `SELECT m.id, m.name, m.type_module, m.user_id, 
+                    t.id AS transaction_id, t.name AS transaction_name, 
+                    t.description, t.mount, t.created_at, tt.name AS type_transaction_name
+             FROM module m
+             LEFT JOIN transaction t ON m.id = t.module_id
+             LEFT JOIN type_transaction tt ON t.type_transaction_id = tt.id
+             WHERE m.user_id = ?`, [userId]
+        );
+        const modules = rows.reduce((acc, row) => {
+            const { id, name, type_module, user_id, transaction_id, transaction_name, description, mount, type_transaction_name, created_at } = row;
+
+            let module = acc.find(m => m.id === id);
+            if (!module) {
+                module = {
+                    id,
+                    name,
+                    type_module,
+                    user_id,
+                    transactions: []
+                };
+                acc.push(module);
+            }
+
+            if (transaction_id) {
+                module.transactions.push({
+                    id: transaction_id,
+                    name: transaction_name,
+                    description,
+                    mount,
+                    type_transaction_name,
+                    created_at
+                });
+            }
+
+            return acc;
+        }, []);
+        return res.status(200).json({ message: 'Modules transactions retrieved successfully', body: modules });
+    } catch (error) {
+        console.error("An error occurred while retrieving modules transactions for user:", error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
 const getTypesModules = async (req, res) => {
     try {
         const rows = await pool.query('SELECT * FROM type_module');
@@ -48,5 +95,6 @@ const getTypesModules = async (req, res) => {
 module.exports = {
     addModule,
     getTypesModules,
-    getModulesByUserId
+    getModulesByUserId,
+    getModulesTransactionsByUserId
 }

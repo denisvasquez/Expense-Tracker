@@ -3,14 +3,14 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 // interfaces
-import { IModules } from '@types/modules'
+import { IModules, IModulesTransactions } from '@types/modules'
 
-export const getModules = createAsyncThunk<IModules[], void>(
-    'modules/getModules',
+export const getModulesTransactions = createAsyncThunk<IModulesTransactions[], void>(
+    'modules/getModulesTransactions',
     async (userId, thunkApi) => {
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/modules/${userId}`,
+                `${import.meta.env.VITE_API_URL}/modules/transactions/${userId}`,
             )
             return response.data.body
         } catch (error) {
@@ -47,12 +47,12 @@ export const modulesSlice = createSlice({
     extraReducers: builder => {
         builder
             .addCase(
-                getModules.fulfilled,
+                getModulesTransactions.fulfilled,
                 (state, action: PayloadAction<IModules[]>) => {
                     return action.payload
                 },
             )
-            .addCase(getModules.rejected, (state, action) => {
+            .addCase(getModulesTransactions.rejected, (state, action) => {
                 console.error('Failed to fetch modules:', action.error.message)
             })
     },
