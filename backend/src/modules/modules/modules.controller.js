@@ -38,23 +38,6 @@ const getModulesByUserId = async (req, res) => {
 const getModulesTransactionsByUserId = async (req, res) => {
     const { userId } = req.params;
     try {
-        // get modules with this format:
-        // {
-        //     id: 1,
-        //     name: 'Module 1',
-        //     type_module: 'Type 1',
-        //     user_id: 1,
-        //     transactions: [
-        //         {
-        //             id: 1,
-        //             name: 'Transaction 1',
-        //             description: 'Description 1',
-        //             mount: 100,
-        //             created_at: '2023-10-01 00:00:00'
-        //             type_transaction_name: 'Type 1',
-        //         },
-        //     ],
-        // }
         const rows = await pool.query(
             `SELECT m.id, m.name, m.type_module, m.user_id, 
                     t.id AS transaction_id, t.name AS transaction_name, 
